@@ -2,4 +2,3 @@
 __pycache__/
 *.pyc
 saved_city.json
-*.json
