@@ -98,9 +98,11 @@ The app handles failures gracefully rather than crashing:
 
 ---
 
-## What's Next
-
-This project is being upgraded to a **Streamlit web interface (v2)** — moving from CMD to a browser-based dashboard with the same core functionality but a visual UI, persistent city preferences, and weather history charts from the logged JSON data.
+## v2 — Streamlit Web Interface
+The CMD version has been upgraded to a full browser-based 
+Streamlit app available on the streamlit-v2 branch. 
+Features the same core functionality with a visual UI, 
+tabbed layout, sidebar controls, and expandable news cards.
 
 ---
 
