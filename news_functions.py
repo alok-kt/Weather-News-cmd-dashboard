@@ -57,18 +57,15 @@ def fetch_news(city, num_articles=5):
 
 
 
-def fetch_category_news():
+def fetch_category_news(category, num_articles=5):
     """Fetches news based on category."""
-
-    print("\nCategories: business, entertainment, health, science, sports, technology")
-    your_category = input("Enter the category name you want: ").strip().lower()
 
     url = "https://newsapi.org/v2/top-headlines"
     
     params = {
-        "category": your_category,
+        "category": category,
         "apiKey": news_key,
-        "pageSize": 5,
+        "pageSize": num_articles,
         "language": "en",
         }
 
@@ -79,7 +76,7 @@ def fetch_category_news():
         articles = data.get('articles', [])
 
         if not articles:
-            print(f"No headlines for the category {your_category}!")
+            print(f"No headlines for the category {category}!")
 
         return articles
     
