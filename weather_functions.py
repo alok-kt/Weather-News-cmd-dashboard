@@ -1,13 +1,14 @@
 import requests
 import os
 from dotenv import load_dotenv
+import streamlit as st
 
 import json
 from datetime import datetime
 filename = "saved_city.json"
 
 load_dotenv()
-api_key = os.getenv("WEATHER_API_KEY")
+api_key = os.environ.get("WEATHER_API_KEY") or st.secrets.get("WEATHER_API_KEY")
 
 if not api_key:
     print("No key found!!")

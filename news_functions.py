@@ -1,12 +1,13 @@
 import requests
 import os
 from dotenv import load_dotenv
+import streamlit as st
 
 import textwrap
 from datetime import datetime
 
 load_dotenv()
-news_key = os.getenv("NEWS_API_KEY")
+news_key = os.environ("NEWS_API_KEY") or st.secrets.get("NEWS_API_KEY")
 
 if not news_key:
     print("No key found!!")
