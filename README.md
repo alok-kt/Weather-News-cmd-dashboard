@@ -1,62 +1,71 @@
-# 🌤️ Weather & News CMD Dashboard
+# 🌤️ Weather & News Dashboard
 
-A command-line Python app that gives you a quick, clean snapshot of the world — weather from any city on the planet and top news by location or category, all from your terminal.
+A Streamlit web app that shows live weather for any city and the latest news by city or category, all in one clean browser dashboard.
+
+> **Live demo:** _add your Streamlit Cloud link here_
 
 ---
 
 ## What It Does
 
-- **Your city on startup** — Automatically fetches and displays the weather report for your default city every time you run the app, and logs it to a local JSON file for historical reference.
-- **Weather by city** — Search real-time weather for any city in the world: temperature, feels like, humidity, and wind speed.
-- **News by city** — Fetch the top 5 latest news articles from any city, with source, timestamp, description, and a direct link to read the full article.
-- **News by category** — Browse top headlines across six categories: business, entertainment, health, science, sports, and technology.
+- **Your city at a glance:** the Weather tab opens with the current weather for a default city (Thrissur), shown as four metric cards: temperature, feels like, humidity, and wind speed.
+- **Weather for any city:** type a city name in the sidebar and get the same four metrics, with the city and country shown as the heading.
+- **News by city:** fetch the latest English-language articles mentioning any city, sorted by most recent.
+- **News by category:** browse top headlines in six categories: business, entertainment, health, science, sports, and technology.
+- **You choose how many:** a sidebar slider sets the number of articles (1 to 20, default 5).
+- **Clean article cards:** each story is an expandable card with the source, publish date, description, and a link to the full article.
+- **Friendly error messages:** misspelled cities and empty searches show a clear message in the app instead of crashing.
 
 ---
 
 ## Why I Built This
 
-This started as a learning project to understand how APIs work in Python — authentication, parameters, error handling, parsing JSON responses. It quickly became something I actually wanted to use daily.
+This started as a command-line project to learn how APIs work in Python: authentication, request parameters, error handling, and parsing JSON responses. Once the logic worked, I turned it into a web app with Streamlit to practice building a real interface on top of it.
 
-The goal was to build something that *feels* like an app, not just a script — clean output, clear menu, graceful error messages, and a logical separation between fetching data and displaying it.
+Because fetching and displaying were kept separate from the start, the same `weather_functions.py` and `news_functions.py` power both the original CLI and the Streamlit app. Only the display layer changed.
 
 ---
 
 ## Project Structure
 
 ```
-weather-news-dashboard/
+Weather-News-cmd-dashboard/
 │
-├── final_display.py        # Entry point — menu and app flow
-├── weather_functions.py    # Weather fetching and display logic
-├── news_functions.py       # News fetching and display logic
+├── app.py                  # Streamlit web app (main entry point)
+├── weather_functions.py    # Weather fetching logic (OpenWeatherMap)
+├── news_functions.py       # News fetching logic (NewsAPI)
+├── final_display.py        # Original command-line version
 ├── requirements.txt        # Dependencies
 ├── .env.example            # API key template
 └── .gitignore
 ```
 
-**Design decision:** Each file has a single responsibility. `weather_functions.py` and `news_functions.py` handle fetching and displaying their respective data. `final_display.py` only handles the menu flow and calls into those modules. This makes the codebase easy to extend — adding a new feature means touching one file, not everything.
+**Design decision:** each file has one job. The two function files fetch data, `app.py` handles the web interface, and `final_display.py` handles the terminal menu. Adding a feature means touching one place, not everything.
 
 ---
 
 ## Tech Stack
 
 - **Python 3**
-- **Requests** — HTTP calls to both APIs
-- **python-dotenv** — Secure API key management via `.env`
-- **OpenWeatherMap API** — Real-time weather data
-- **NewsAPI** — News articles and top headlines
+- **Streamlit:** web interface (tabs, sidebar controls, metric cards, expanders)
+- **Requests:** HTTP calls to both APIs
+- **python-dotenv:** API key management through a `.env` file
+- **OpenWeatherMap API:** real-time weather data
+- **NewsAPI:** news articles and top headlines
 
 ---
 
 ## Getting Started
 
 **1. Clone the repository**
+
 ```bash
 git clone https://github.com/alok-kt/Weather-News-cmd-dashboard.git
 cd Weather-News-cmd-dashboard
 ```
 
 **2. Install dependencies**
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -64,56 +73,91 @@ pip install -r requirements.txt
 **3. Set up your API keys**
 
 Copy `.env.example` to `.env` and add your keys:
+
 ```
 WEATHER_API_KEY=your_openweathermap_key
 NEWS_API_KEY=your_newsapi_key
 ```
 
-Get your free keys here:
+Get free keys here:
+
 - [OpenWeatherMap](https://openweathermap.org/api)
 - [NewsAPI](https://newsapi.org/)
 
-**4. Set your default city**
+**4. (Optional) Change the default city**
 
-In `weather_functions.py`, the `my_weather()` function accepts a city parameter. Update the default value to your city:
+In `app.py`, update the city in the Weather tab:
+
 ```python
-def my_weather(city="your_city"):
+st.subheader("Your City - Thrissur")
+default_data = fetch_weather("thrissur")
 ```
 
 **5. Run the app**
+
 ```bash
-python final_display.py
+streamlit run app.py
+```
+
+Streamlit will open the dashboard in your browser (usually at `http://localhost:8501`).
+
+---
+
+## How to Use
+
+1. Open the **sidebar** on the left.
+2. Enter a city under **Weather**, or leave it empty to keep your default city.
+3. Under **News**, choose **City** or **Category**, then pick a city or category.
+4. Set the number of articles with the slider.
+5. Click **Search**. Results appear in the **Weather** and **News** tabs.
+
+---
+
+## Deploying to Streamlit Community Cloud
+
+1. Push the project to GitHub (never commit your real `.env` file).
+2. Create a new app on [Streamlit Community Cloud](https://streamlit.io/cloud) pointing to `app.py`.
+3. In the app's **Secrets** settings, add your keys:
+
+```toml
+WEATHER_API_KEY = "your_openweathermap_key"
+NEWS_API_KEY = "your_newsapi_key"
 ```
 
 ---
 
 ## Error Handling
 
-The app handles failures gracefully rather than crashing:
+The app handles failures gracefully instead of crashing:
+
 - Invalid or misspelled city names
 - Invalid API keys (401)
-- Rate limit and server errors with descriptive messages
+- Rate limit and server errors
 - Network timeouts and connection failures
-- Empty API responses
+- Empty API responses and articles with missing fields
 
 ---
 
-## v2 — Streamlit Web Interface
-The CMD version has been upgraded to a full browser-based 
-Streamlit app available on the streamlit-v2 branch. 
-Features the same core functionality with a visual UI, 
-tabbed layout, sidebar controls, and expandable news cards.
+## Running the Original CLI Version
+
+The terminal version is still included:
+
+```bash
+python final_display.py
+```
+
+It offers a menu to search weather by city and news by city or category from the command line.
 
 ---
 
 ## Learnings
 
-This was my first fully working multi-API project. Key things I learned building it:
-- How to structure a Python project across multiple modules
-- Secure API key management with `.env`
-- Defensive programming — handling every failure mode, not just the happy path
-- The difference between a script that runs and an app that feels intentional
+- Structuring a Python project across multiple modules
+- Managing API keys securely with `.env` and platform secrets
+- Defensive programming: handling every failure mode, not just the happy path
+- Turning a working script into a web app with Streamlit: layout, tabs, sidebar widgets, and metric cards
+- Keeping logic separate from display, so one backend can serve both a terminal and a web interface
 
 ---
 
-*Built by [Alok](https://github.com/alok-kt)*
+_Built by [Alok](https://github.com/alok-kt)_
